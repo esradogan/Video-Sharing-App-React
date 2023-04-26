@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import logo from '../img/youtube-play-red-logo.png';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   flex: 1;
@@ -67,7 +68,6 @@ const Button = styled.button`
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
-
   const handleDarkMode = () => {
     darkMode ? setDarkMode(false) : setDarkMode(true);
   };
@@ -75,9 +75,11 @@ const Menu = ({ darkMode, setDarkMode }) => {
   return (
     <Container>
       <Wrapper>
-        <Logo>
-          <Img src={logo}></Img>TubeDummy
-        </Logo>
+        <Link to="/" style={{textDecoration: "none", color: "inherit"}}>
+          <Logo>
+            <Img src={logo}></Img>TubeDummy
+          </Logo>
+        </Link>
         <Item>
           <HomeIcon></HomeIcon>
           Home
@@ -147,7 +149,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Item>
         <Item onClick={() => handleDarkMode()}>
           <HomeIcon></HomeIcon>
-          Dark Mode
+          {darkMode ? "Light" : "Dark"} Mode
         </Item>
       </Wrapper>
     </Container>
@@ -155,3 +157,5 @@ const Menu = ({ darkMode, setDarkMode }) => {
 };
 
 export default Menu;
+
+
