@@ -37,6 +37,9 @@ const Item = styled.div`
   cursor: pointer;
   gap: 20px;
   padding: 7.5px 0px;
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+  }
 `;
 
 const Title = styled.h2`
@@ -75,7 +78,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
   return (
     <Container>
       <Wrapper>
-        <Link to="/" style={{textDecoration: "none", color: "inherit"}}>
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           <Logo>
             <Img src={logo}></Img>TubeDummy
           </Logo>
@@ -103,11 +106,13 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Item>
         <Hr></Hr>
 
-        <Login>Sign into like videos, comment and subscribe </Login>
-        <Button>
-          <AccountCircleOutlinedIcon />
-          SIGN IN
-        </Button>
+        <Login>Sign into like videos, comment and :subscribe </Login>
+        <Link to="/signin" style={{ textDecoration: 'none' }}>
+          <Button>
+            <AccountCircleOutlinedIcon />
+            SIGN IN
+          </Button>
+        </Link>
         <Hr></Hr>
         <Title> Best of DummyTube</Title>
         <Item>
@@ -149,7 +154,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Item>
         <Item onClick={() => handleDarkMode()}>
           <HomeIcon></HomeIcon>
-          {darkMode ? "Light" : "Dark"} Mode
+          {darkMode ? 'Light' : 'Dark'} Mode
         </Item>
       </Wrapper>
     </Container>
@@ -157,5 +162,3 @@ const Menu = ({ darkMode, setDarkMode }) => {
 };
 
 export default Menu;
-
-

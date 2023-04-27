@@ -10,6 +10,7 @@ import {
   BrowserRouter,
 } from "react-router-dom";
 import { Video } from "./pages/Video";
+import { SignIn } from "./pages/SignIn";
 
 
 const Container = styled.div`
@@ -37,9 +38,10 @@ function App () {
             <Navbar />
             <Wrapper>
               <Routes>
-                <Route path="/" index element={<Home/>}></Route>
+                <Route path="/" index element={<Home />}></Route>
+                <Route path="/signin" index element={<SignIn />}></Route>
                 <Route path="video">
-                  <Route path=":id" element={<Video/>}></Route>
+                  <Route path=":id" element={<Video />}></Route>
 
                 </Route>
 
