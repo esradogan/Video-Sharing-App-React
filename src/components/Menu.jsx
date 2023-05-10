@@ -83,18 +83,30 @@ const Menu = ({ darkMode, setDarkMode }) => {
             <Img src={logo}></Img>TubeDummy
           </Logo>
         </Link>
-        <Item>
-          <HomeIcon></HomeIcon>
-          Home
-        </Item>
-        <Item>
-          <HomeIcon></HomeIcon>
-          Explore
-        </Item>
-        <Item>
-          <HomeIcon></HomeIcon>
-          Subscription
-        </Item>
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit ' }}>
+          <Item>
+            <HomeIcon></HomeIcon>
+            Home
+          </Item>
+        </Link>
+
+        <Link to="/trend" style={{ textDecoration: 'none', color: 'inherit ' }}>
+          <Item>
+            <HomeIcon></HomeIcon>
+            Explore
+          </Item>
+        </Link>
+        
+        <Link
+          to="/subscribe"
+          style={{ textDecoration: 'none', color: 'inherit ' }}
+        >
+          <Item>
+            <HomeIcon></HomeIcon>
+            Subscription
+          </Item>
+        </Link>
+
         <Hr></Hr>
         <Item>
           <HomeIcon></HomeIcon>

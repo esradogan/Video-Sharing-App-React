@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -66,8 +67,15 @@ const Links = styled.div`
 `;
 
 const Link = styled.span`
-margin-left: 10px`;
+  margin-left: 10px;
+`;
 export const SignIn = () => {
+  const handleSubmit = useCallback(() => {
+    try {
+      const auth = axios.post('/signin', { username: '', password: '' });
+    } catch (error) {}
+  }, []);
+
   return (
     <Container>
       <Wrapper>
@@ -75,7 +83,7 @@ export const SignIn = () => {
         <SubTitle>to continue to DummyTube</SubTitle>
         <Input placeholder="Username"></Input>
         <Input placeholder="Password" type="password"></Input>
-        <Button>Sign In</Button>
+        <Button onClick={handleSubmit()}>Sign In</Button>
         <Title>or</Title>
         <Input placeholder="Username"></Input>
         <Input placeholder="Email"></Input>
