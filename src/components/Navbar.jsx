@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Link } from 'react-router-dom';
+import {  useSelector } from 'react-redux';
+
 
 const Container = styled.div`
   position: sticky;
@@ -50,6 +52,8 @@ const Button = styled.button`
 `;
 
 const Navbar = () => {
+  const { currUser } = useSelector(state => state.user);
+  console.log(" ka ", currUser)
   return (
     <Container>
       <Wrapper>
@@ -58,12 +62,16 @@ const Navbar = () => {
           <SearchOutlinedIcon></SearchOutlinedIcon>
         </Search>
 
-        <Link to="/signin" style={{ textDecoration: 'none' }}>
-          <Button>
-            <AccountCircleOutlinedIcon />
-            SIGN IN
-          </Button>
-        </Link>
+        {!currUser ? (
+          <Link to="/signin" style={{ textDecoration: 'none' }}>
+            <Button>
+              <AccountCircleOutlinedIcon />
+              SIGN IN
+            </Button>
+          </Link>
+        ) : (
+          ''
+        )}
       </Wrapper>
     </Container>
   );
