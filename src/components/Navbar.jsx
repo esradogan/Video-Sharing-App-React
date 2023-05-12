@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Link } from 'react-router-dom';
-import {  useSelector } from 'react-redux';
-
+import { useSelector } from 'react-redux';
+import { VideoCallOutlined } from '@mui/icons-material';
 
 const Container = styled.div`
   position: sticky;
@@ -51,9 +51,21 @@ const Button = styled.button`
   gap: 5px;
 `;
 
+const User = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px
+`;
+const Avatar = styled.img`
+  width: 35px;
+  height: 35px;
+  flex: 1;
+  border-radius: 50%;
+  background-color: #999;
+`;
 const Navbar = () => {
-  const { currUser } = useSelector(state => state.user);
-  console.log(" ka ", currUser)
+  const { currUser } = useSelector((state) => state.user);
+  console.log(' ka ', currUser);
   return (
     <Container>
       <Wrapper>
@@ -70,7 +82,11 @@ const Navbar = () => {
             </Button>
           </Link>
         ) : (
-          ''
+          <User>
+            <VideoCallOutlined></VideoCallOutlined>
+            <Avatar></Avatar>
+            {currUser.name}
+          </User>
         )}
       </Wrapper>
     </Container>

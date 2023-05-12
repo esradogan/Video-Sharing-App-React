@@ -4,6 +4,7 @@ import logo from '../img/youtube-play-red-logo.png';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Container = styled.div`
   flex: 1;
@@ -71,6 +72,7 @@ const Button = styled.button`
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
+  const { currUser } = useSelector((state) => state.user);
   const handleDarkMode = () => {
     darkMode ? setDarkMode(false) : setDarkMode(true);
   };
@@ -96,7 +98,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
             Explore
           </Item>
         </Link>
-        
+
         <Link
           to="/subscribe"
           style={{ textDecoration: 'none', color: 'inherit ' }}
@@ -118,14 +120,19 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Item>
         <Hr></Hr>
 
-        <Login>Sign into like videos, comment and :subscribe </Login>
-        <Link to="/signin" style={{ textDecoration: 'none' }}>
-          <Button>
-            <AccountCircleOutlinedIcon />
-            SIGN IN
-          </Button>
-        </Link>
-        <Hr></Hr>
+        {!currUser && (
+          <>
+            <Login>Sign into like videos, comment and subscribe </Login>
+            <Link to="/signin" style={{ textDecoration: 'none' }}>
+              <Button>
+                <AccountCircleOutlinedIcon />
+                SIGN IN
+              </Button>
+            </Link>{' '}
+            <Hr></Hr>
+          </>
+        )}
+
         <Title> Best of DummyTube</Title>
         <Item>
           <HomeIcon></HomeIcon>
