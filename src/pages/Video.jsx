@@ -12,7 +12,14 @@ import { useLocation } from 'react-router';
 import axios from 'axios';
 import { format } from 'timeago.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { dislike, fetchFailure, fetchStart, fetchSuccess, like } from '../redux/videosSlice';
+import {
+  dislike,
+  fetchFailure,
+  fetchStart,
+  fetchSuccess,
+  like,
+} from '../redux/videosSlice';
+import { subscription } from '../redux/usersSlice';
 
 const Container = styled.div`
   display: flex;
@@ -130,11 +137,9 @@ export const Video = () => {
 
   const [channel, setChannel] = useState(null);
 
-
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-    
         await axios
           .get(`/videos/find/${id}`)
           .then((response) => {
@@ -161,17 +166,26 @@ export const Video = () => {
     fetchVideo();
   }, [currVideo?.userId, dispatch, id]);
 
-  
   const handleLike = async () => {
     const likeRes = await axios.put(`/users/like/${currVideo._id}`);
-    dispatch(like(currUser._id))
-    console.log("Likee", likeRes)
+    dispatch(like(currUser._id));
+    console.log('Likee', likeRes);
   };
 
-  const handleDislike =async  () => {
-    const dislikeRes = await axios.put(`/users/dislike/${currVideo._id}`)
-    dispatch(dislike(currUser._id))
+  const handleDislike = async () => {
+    const dislikeRes = await axios.put(`/users/dislike/${currVideo._id}`);
+    dispatch(dislike(currUser._id));
+  };
 
+  const handleSubscribe = async () => {
+    await axios
+      .put(`/users/subscribe/${channel.id}`)
+      .then((res) => {
+        dispatch(subscription(channel.id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -240,7 +254,11 @@ export const Video = () => {
               <Description>{currVideo?.description}</Description>
             </ChannelDetail>
           </ChannelInfo>
-          <ChannelButton>Subscribe</ChannelButton>
+          <ChannelButton onClick={handleSubscribe}>
+            {channel?.subscribedUsers.includes(currUser._id)
+              ? 'SUBSCRIBED'
+              : 'SUBSCRIBE'}
+          </ChannelButton>
         </Channel>
 
         <Hr></Hr>

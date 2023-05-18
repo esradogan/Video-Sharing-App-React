@@ -18,7 +18,7 @@ export const userSlice = createSlice({
             state.loading = true
         },
         loginSuccess: (state, action) => {
-            console.log("I wonder about it",  state, action.payload)
+            console.log("I wonder about it", state, action.payload)
             state.loading = false
             state.error = false
             state.currUser = action.payload
@@ -35,10 +35,14 @@ export const userSlice = createSlice({
         incrementByAmount: (state, action) => {
             state.value += action.payload
         },
+        subscription: (state, action) => {
+            !state.currUser.subscribedUsers.includes(action.payload) ? state.currUser.subscribedUsers.push(action.payload)
+                : state.currUser.subscribedUsers.splice(state.currUser.subscribedUsers.findIndex(channelId => channelId === action.payload), 1)
+        }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { loginStart, loginFailure, loginSuccess, logout } = userSlice.actions
+export const { loginStart, loginFailure, loginSuccess, logout, subscription } = userSlice.actions
 
 export default userSlice.reducer
