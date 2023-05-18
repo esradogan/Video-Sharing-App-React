@@ -6,7 +6,8 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: process.env.API_KEY,
+    // apiKey: process.env.API_KEY,     
+    apiKey: "AIzaSyBo4K_8cBnVNyCXfR6QUyJjTl0aTxkSF8c",
     authDomain: "video-sharing-app-bcdb9.firebaseapp.com",
     projectId: "video-sharing-app-bcdb9",
     storageBucket: "video-sharing-app-bcdb9.appspot.com",

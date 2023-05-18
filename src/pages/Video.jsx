@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
 import { Comments } from '../components/Comments';
 import { Card } from '../components/Card';
+import { useLocation } from 'react-router';
+import axios from 'axios';
+import { format } from 'timeago.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { dislike, fetchFailure, fetchStart, fetchSuccess, like } from '../redux/videosSlice';
 
 const Container = styled.div`
   display: flex;
@@ -113,6 +120,60 @@ const ChannelButton = styled.button`
 `;
 
 export const Video = () => {
+  const path = useLocation();
+  const dispatch = useDispatch();
+
+  const id = path.pathname?.split('/')[2];
+
+  const { currVideo } = useSelector((state) => state.video);
+  const { currUser } = useSelector((state) => state.user);
+
+  const [channel, setChannel] = useState(null);
+
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+    
+        await axios
+          .get(`/videos/find/${id}`)
+          .then((response) => {
+            console.log('video', response);
+            dispatch(fetchSuccess(response.data));
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        await axios
+          .get(`/users/find/${currVideo?.userId}`)
+          .then((response) => {
+            console.log('user', response);
+            setChannel(response.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } catch (error) {
+        dispatch(fetchFailure);
+      }
+    };
+    fetchVideo();
+  }, [currVideo?.userId, dispatch, id]);
+
+  
+  const handleLike = async () => {
+    const likeRes = await axios.put(`/users/like/${currVideo._id}`);
+    dispatch(like(currUser._id))
+    console.log("Likee", likeRes)
+  };
+
+  const handleDislike =async  () => {
+    const dislikeRes = await axios.put(`/users/dislike/${currVideo._id}`)
+    dispatch(dislike(currUser._id))
+
+  };
+
   return (
     <Container>
       <Content>
@@ -130,23 +191,33 @@ export const Video = () => {
             width="100%"
             height="720"
             src="https://www.youtube.com/embed/n_uFzLPYDd8"
-            title="[Oynatma Listesi] İş için caz müziği ve yağmur seslerinin yatıştırıcı listesi ☕🎧"
+            title={currVideo?.title}
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
           ></iframe>
         </VideoWrapper>
-        <Title>Yatıştırıcı Müzikler</Title>
+        <Title>{currVideo?.title}</Title>
         <Details>
-          <Info>874.098 views - 1 month ago</Info>
+          <Info>
+            {currVideo?.views} views - {format(currVideo?.createdAt)}
+          </Info>
           <Buttons>
-            <Button>
-              <ThumbUpAltOutlinedIcon fontSize="small"></ThumbUpAltOutlinedIcon>
-              23B
+            <Button onClick={handleLike}>
+              {channel?.likes?.includes(currUser._id) ? (
+                <ThumbUpIcon fontSize="small"> </ThumbUpIcon>
+              ) : (
+                <ThumbUpAltOutlinedIcon fontSize="small"></ThumbUpAltOutlinedIcon>
+              )}
+              {currVideo?.likes?.length}
             </Button>
-            <Button>
-              <ThumbDownOutlinedIcon fontSize="small"></ThumbDownOutlinedIcon>
-              Dislike
+            <Button onClick={() => handleDislike()}>
+              {channel?.dislikes?.includes(currUser._id) ? (
+                <ThumbDownAltIcon fontSize="small"> </ThumbDownAltIcon>
+              ) : (
+                <ThumbDownOutlinedIcon fontSize="small"></ThumbDownOutlinedIcon>
+              )}
+              {currVideo?.dislikes?.length}
             </Button>
             <Button>
               <ReplyOutlinedIcon fontSize="small"></ReplyOutlinedIcon>
@@ -164,24 +235,9 @@ export const Video = () => {
           <ChannelInfo>
             <Avatar src="https://pbs.twimg.com/profile_images/1257258876975677441/TaZNP0py_400x400.jpg"></Avatar>
             <ChannelDetail>
-              <ChannelName>
-                Yatıştırıcı Yazılım Geliştirici Müzikleri
-              </ChannelName>
+              <ChannelName>{channel?.name}</ChannelName>
               <ChannelCounter>233,3K subscriber</ChannelCounter>
-              <Description>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
-                gravida enim sed justo blandit, quis finibus erat pharetra.
-                Maecenas quis dui justo. Nunc eget lobortis mi. Praesent maximus
-                scelerisque quam, ultricies pretium dui condimentum tempus.
-                Pellentesque ultricies pretium varius. Nullam molestie mi non
-                consectetur consectetur. Aliquam facilisis massa orci, sed
-                iaculis mauris rhoncus a. Mauris luctus pellentesque tortor,
-                vitae congue eros rutrum id. Aenean at dictum nibh. Nam eu ante
-                ac risus blandit congue vitae et lacus. Nunc vel nisi massa.
-                Praesent eu erat mi. Fusce bibendum justo at arcu fringilla, at
-                dictum eros tincidunt. Etiam eu quam ac erat imperdiet malesuada
-                et ut magna.
-              </Description>
+              <Description>{currVideo?.description}</Description>
             </ChannelDetail>
           </ChannelInfo>
           <ChannelButton>Subscribe</ChannelButton>
@@ -190,10 +246,10 @@ export const Video = () => {
         <Hr></Hr>
         <Comments></Comments>
       </Content>
-      <RecommendationSide>
+      {/* <RecommendationSide>
         <Card type="small"></Card>
         <Card type="small"></Card>
-      </RecommendationSide>
+      </RecommendationSide> */}
     </Container>
   );
 };

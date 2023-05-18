@@ -54,7 +54,7 @@ const Button = styled.button`
 const User = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px
+  gap: 10px;
 `;
 const Avatar = styled.img`
   width: 35px;
@@ -84,8 +84,7 @@ const Navbar = () => {
         ) : (
           <User>
             <VideoCallOutlined></VideoCallOutlined>
-            <Avatar></Avatar>
-            {currUser.name}
+            <Avatar src={currUser.img}></Avatar>{currUser.name}
           </User>
         )}
       </Wrapper>

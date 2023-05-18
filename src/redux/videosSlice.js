@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { act } from 'react-dom/test-utils'
 
 const initialState = {
-    video: null,
+    currVideo: null,
     loading: false,
     error: false
 }
@@ -10,31 +11,35 @@ export const videoSlice = createSlice({
     name: 'video',
     initialState,
     reducers: {
-        loginStart: (state) => {
+        fetchStart: (state) => {
             state.loading = true
         },
-        loginSuccess: (state, action) => {
-            console.log("I wonder about it",  state, action.payload)
+        fetchSuccess: (state, action) => {
+            console.log("I wonder about it", state, action.payload)
             state.loading = false
             state.error = false
-            state.currUser = action.payload
+            state.currVideo = action.payload
         },
-        loginFailure: (state) => {
+        fetchFailure: (state) => {
             state.loading = false
             state.error = true
         },
-        logout: (state) => {
-            state.loading = false
-            state.currUser = null
-            state.error = false
+        like: (state, action) => {
+            if (!state.currVideo.likes.includes(action.payload)) {
+                state.currVideo.likes.push(action.payload)
+                state.currVideo.dislikes.splice(state.currVideo.dislikes.findIndex(userId => userId === action.payload), 1)
+            }
         },
-        incrementByAmount: (state, action) => {
-            state.value += action.payload
-        },
+        dislike: (state, action) => {
+            if (!state.currVideo.dislikes.includes(action.payload)) {
+                state.currVideo.dislikes.push(action.payload)
+                state.currVideo.likes.splice(state.currVideo.likes.findIndex(userId => userId === action.payload), 1)
+            }
+        }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { loginStart, loginFailure, loginSuccess, logout } = videoSlice.actions
+export const { fetchStart, fetchFailure, fetchSuccess, like, dislike } = videoSlice.actions
 
 export default videoSlice.reducer

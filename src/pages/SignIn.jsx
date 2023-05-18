@@ -3,6 +3,8 @@ import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { loginFailure, loginStart, loginSuccess } from '../redux/usersSlice';
+import { auth, provider } from '../firebase.js';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 const Container = styled.div`
   display: flex;
@@ -111,6 +113,37 @@ export const SignIn = () => {
     } catch (error) {}
   };
 
+  const signInWithGoogle = async () => {
+    dispatch(loginStart())
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        console.log('Result', result);
+        await axios
+          .post('auth/google', {
+            name: result.user.displayName,
+            email: result.user.email,
+            image: result.user.photoURL,
+          })
+          .then((res) => {
+            dispatch(loginSuccess(res.data));
+          });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        dispatch(loginFailure(error));
+
+      });
+
+    try {
+      const auth = await axios.post('auth/signup', {
+        email: mail,
+        name: name,
+        password: password,
+      });
+
+    } catch (error) {}
+  };
+
   const handleSubmit = useCallback(() => {}, []);
 
   return (
@@ -129,6 +162,7 @@ export const SignIn = () => {
         ></Input>
         <Button onClick={(e) => handleLogin()}>Sign In</Button>
         <Title>or</Title>
+        <Button onClick={() => signInWithGoogle()}>Sign in with Google</Button>
         <Input
           placeholder="Username"
           onChange={(e) => setName(e.target.value)}
